@@ -155,19 +155,21 @@ const as = {
   /**
    * 删除指定回答
    */
-  deleteOne: ({ answer_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  deleteOne:
+    ({ answer_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      deleteAnswer({ answer_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        deleteAnswer({ answer_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认删除该回答？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认删除该回答？', confirm, () => {}, options);
+    },
 
   /**
    * 批量删除回答

@@ -176,19 +176,21 @@ const as = {
   /**
    * 删除一个举报
    */
-  deleteOne: ({ reportable_type, reportable_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  deleteOne:
+    ({ reportable_type, reportable_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      deleteReport({ reportable_type, reportable_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        deleteReport({ reportable_type, reportable_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认已处理完该举报？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认已处理完该举报？', confirm, () => {}, options);
+    },
 
   /**
    * 批量删除举报

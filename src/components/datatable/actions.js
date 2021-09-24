@@ -12,130 +12,134 @@ const as = {
   /**
    * 初始化
    */
-  onCreate: ({ element }) => (state, actions) => {
-    // 表格滚动时，表头阴影变化
-    $(element)
-      .find('tbody')
-      .on('scroll', (e) => {
-        actions.setState({ isScrollTop: !e.target.scrollTop });
-      });
+  onCreate:
+    ({ element }) =>
+    (state, actions) => {
+      // 表格滚动时，表头阴影变化
+      $(element)
+        .find('tbody')
+        .on('scroll', (e) => {
+          actions.setState({ isScrollTop: !e.target.scrollTop });
+        });
 
-    // 更新完表格结构后，绑定右键菜单
-    subscribe('datatable_state_update', ({ buttons }) => {
-      // 确保菜单初始化只执行一次
-      let $wrapper = $('.datatable-contextmenu-wrapper');
-      if ($wrapper.length) {
-        return;
-      }
+      // 更新完表格结构后，绑定右键菜单
+      subscribe('datatable_state_update', ({ buttons }) => {
+        // 确保菜单初始化只执行一次
+        let $wrapper = $('.datatable-contextmenu-wrapper');
+        if ($wrapper.length) {
+          return;
+        }
 
-      // 创建用于定位菜单的隐藏元素
-      $wrapper = $('<div class="datatable-contextmenu-wrapper">')
-        .css({
-          position: 'absolute',
-        })
-        .appendTo('body');
+        // 创建用于定位菜单的隐藏元素
+        $wrapper = $('<div class="datatable-contextmenu-wrapper">')
+          .css({
+            position: 'absolute',
+          })
+          .appendTo('body');
 
-      // 创建菜单
-      const $contextmenu = $(
-        '<ul class="mdui-menu datatable-contextmenu">',
-      ).appendTo('body');
+        // 创建菜单
+        const $contextmenu = $(
+          '<ul class="mdui-menu datatable-contextmenu">',
+        ).appendTo('body');
 
-      buttons.forEach((button) => {
-        const isTarget = button.type === 'target';
-        const icon = isTarget ? 'open_in_new' : button.icon;
-        const label = isTarget ? '新窗口打开' : button.label;
-        const target = isTarget ? '_blank' : '_self';
+        buttons.forEach((button) => {
+          const isTarget = button.type === 'target';
+          const icon = isTarget ? 'open_in_new' : button.icon;
+          const label = isTarget ? '新窗口打开' : button.label;
+          const target = isTarget ? '_blank' : '_self';
 
-        const $menuItem = `
+          const $menuItem = `
           <li class="mdui-menu-item">
             <a href="javascript:;" target="${target}" class="mdui-ripple">
               <i class="mdui-menu-item-icon mdui-icon material-icons">${icon}</i>${label}
             </a>
           </li>
         `;
-        $contextmenu.append($menuItem);
-      });
-
-      const menu = new mdui.Menu($wrapper, $contextmenu);
-
-      // 绑定右键事件
-      $document.on('contextmenu', (e) => {
-        const $target = $(e.target);
-        const isTr = $target.is('.mc-datatable tbody tr');
-        const isTrChild = $target.parents('tr').is('.mc-datatable tbody tr');
-
-        // 仅在表格行上右键点击时弹出菜单
-        if (!isTr && !isTrChild) {
-          return;
-        }
-
-        // 0：移动端长按（iOS 测试未通过）
-        // 2：电脑端右键
-        if (e.button !== 2 && e.button !== 0) {
-          return;
-        }
-
-        e.preventDefault();
-
-        // 获取当前点击行的数据
-        const $tr = isTr ? $target : $target.parents('tr');
-        const primaryValue = $tr.data('id');
-        const currentState = actions.getState();
-        const row = findItem(
-          currentState.data,
-          currentState.primaryKey,
-          primaryValue,
-        );
-
-        // 给菜单项绑定事件
-        buttons.forEach((button, index) => {
-          switch (button.type) {
-            case 'target':
-              menu.$element
-                .find('a')
-                .eq(index)
-                .attr('href', button.getTargetLink(row));
-              break;
-
-            case 'btn':
-              menu.$element.find('a').get(index).onclick = (ae) => {
-                ae.preventDefault();
-                button.onClick(row);
-              };
-              break;
-
-            default:
-              break;
-          }
+          $contextmenu.append($menuItem);
         });
 
-        // 仅选中当前点击行
-        actions.uncheckAll();
-        actions.checkOne(primaryValue);
+        const menu = new mdui.Menu($wrapper, $contextmenu);
 
-        // 鼠标点击位置，相对于页面
-        const position = {
-          top: `${e.pageY}px`,
-          left: `${e.pageX}px`,
-        };
+        // 绑定右键事件
+        $document.on('contextmenu', (e) => {
+          const $target = $(e.target);
+          const isTr = $target.is('.mc-datatable tbody tr');
+          const isTrChild = $target.parents('tr').is('.mc-datatable tbody tr');
 
-        $wrapper.css(position);
-        menu.$element.css(position);
-        menu.open();
+          // 仅在表格行上右键点击时弹出菜单
+          if (!isTr && !isTrChild) {
+            return;
+          }
+
+          // 0：移动端长按（iOS 测试未通过）
+          // 2：电脑端右键
+          if (e.button !== 2 && e.button !== 0) {
+            return;
+          }
+
+          e.preventDefault();
+
+          // 获取当前点击行的数据
+          const $tr = isTr ? $target : $target.parents('tr');
+          const primaryValue = $tr.data('id');
+          const currentState = actions.getState();
+          const row = findItem(
+            currentState.data,
+            currentState.primaryKey,
+            primaryValue,
+          );
+
+          // 给菜单项绑定事件
+          buttons.forEach((button, index) => {
+            switch (button.type) {
+              case 'target':
+                menu.$element
+                  .find('a')
+                  .eq(index)
+                  .attr('href', button.getTargetLink(row));
+                break;
+
+              case 'btn':
+                menu.$element.find('a').get(index).onclick = (ae) => {
+                  ae.preventDefault();
+                  button.onClick(row);
+                };
+                break;
+
+              default:
+                break;
+            }
+          });
+
+          // 仅选中当前点击行
+          actions.uncheckAll();
+          actions.checkOne(primaryValue);
+
+          // 鼠标点击位置，相对于页面
+          const position = {
+            top: `${e.pageY}px`,
+            left: `${e.pageX}px`,
+          };
+
+          $wrapper.css(position);
+          menu.$element.css(position);
+          menu.open();
+        });
       });
-    });
-  },
+    },
 
   /**
    * 销毁前执行
    */
-  onDestroy: ({ element }) => (state, actions) => {
-    $(element).find('tbody').off('scroll');
-    $('.datatable-contextmenu-wrapper').remove();
-    $('.datatable-contextmenu').remove();
+  onDestroy:
+    ({ element }) =>
+    (state, actions) => {
+      $(element).find('tbody').off('scroll');
+      $('.datatable-contextmenu-wrapper').remove();
+      $('.datatable-contextmenu').remove();
 
-    actions.setState(stateDefault);
-  },
+      actions.setState(stateDefault);
+    },
 
   /**
    * 开始加载数据
@@ -155,22 +159,24 @@ const as = {
   /**
    * 数据加载成功
    */
-  loadSuccess: ({ data, pagination }) => (state, actions) => {
-    const isCheckedRows = {};
-    data.map((item) => {
-      isCheckedRows[item[state.primaryKey]] = false;
-    });
+  loadSuccess:
+    ({ data, pagination }) =>
+    (state, actions) => {
+      const isCheckedRows = {};
+      data.map((item) => {
+        isCheckedRows[item[state.primaryKey]] = false;
+      });
 
-    actions.setState({
-      loading: false,
-      isCheckedRows,
-      isCheckedAll: false,
-      checkedCount: 0,
-      data,
-    });
+      actions.setState({
+        loading: false,
+        isCheckedRows,
+        isCheckedAll: false,
+        checkedCount: 0,
+        data,
+      });
 
-    emit('pagination_state_update', pagination);
-  },
+      emit('pagination_state_update', pagination);
+    },
 
   /**
    * 更新某一行的数据
@@ -244,13 +250,15 @@ const as = {
   /**
    * 修改排序方式
    */
-  changeOrder: ({ e, order, onChange }) => (state, actions) => {
-    e.preventDefault();
+  changeOrder:
+    ({ e, order, onChange }) =>
+    (state, actions) => {
+      e.preventDefault();
 
-    actions.setState({ order });
+      actions.setState({ order });
 
-    onChange();
-  },
+      onChange();
+    },
 };
 
 export default extend(as, commonActions);

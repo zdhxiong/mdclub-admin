@@ -16,20 +16,22 @@ import apiCatch from '~/utils/errorHandler';
 let dialog;
 
 const as = {
-  onCreate: ({ element }) => (state, actions) => {
-    dialog = new mdui.Dialog(element, {
-      history: false,
-    });
-
-    dialog.$element.on('open.mdui.dialog', () => {
-      setTimeout(() => {
-        dialog.$element.find('input[name="headline"]')[0].focus();
-        mdui.updateTextFields(dialog.$element.find('.mdui-textfield'));
-        dialog.handleUpdate();
-        actions.headerReset();
+  onCreate:
+    ({ element }) =>
+    (state, actions) => {
+      dialog = new mdui.Dialog(element, {
+        history: false,
       });
-    });
-  },
+
+      dialog.$element.on('open.mdui.dialog', () => {
+        setTimeout(() => {
+          dialog.$element.find('input[name="headline"]')[0].focus();
+          mdui.updateTextFields(dialog.$element.find('.mdui-textfield'));
+          dialog.handleUpdate();
+          actions.headerReset();
+        });
+      });
+    },
 
   /**
    * 打开对话框
@@ -38,68 +40,70 @@ const as = {
    * 若user为整型，则需要先根据该参数获取用户信息；
    * 若user为对象，则不需要再获取用户信息
    */
-  open: (user = null) => (state, actions) => {
-    const isComplete = !isNumber(user);
+  open:
+    (user = null) =>
+    (state, actions) => {
+      const isComplete = !isNumber(user);
 
-    if (isComplete) {
-      actions.setState({
-        user_id: user.user_id,
-        username: user.username,
-        avatar: user.avatar,
-        cover: user.cover,
-        headline: user.headline,
-        blog: user.blog,
-        company: user.company,
-        location: user.location,
-        bio: user.bio,
-        loading: false,
-      });
-    } else {
-      actions.setState({
-        user_id: user,
-        username: '',
-        avatar: '',
-        cover: '',
-        headline: '',
-        blog: '',
-        company: '',
-        location: '',
-        bio: '',
-        loading: true,
-      });
-    }
-
-    dialog.open();
-
-    if (isComplete) {
-      return;
-    }
-
-    // 只传入了 ID，获取用户详情
-    getUser({ user_id: user })
-      .finally(() => {
-        actions.setState({ loading: false });
-      })
-      .then(({ data }) => {
+      if (isComplete) {
         actions.setState({
-          user_id: data.user_id,
-          username: data.username,
-          avatar: data.avatar,
-          cover: data.cover,
-          headline: data.headline,
-          blog: data.blog,
-          company: data.company,
-          location: data.location,
-          bio: data.bio,
+          user_id: user.user_id,
+          username: user.username,
+          avatar: user.avatar,
+          cover: user.cover,
+          headline: user.headline,
+          blog: user.blog,
+          company: user.company,
+          location: user.location,
+          bio: user.bio,
+          loading: false,
         });
+      } else {
+        actions.setState({
+          user_id: user,
+          username: '',
+          avatar: '',
+          cover: '',
+          headline: '',
+          blog: '',
+          company: '',
+          location: '',
+          bio: '',
+          loading: true,
+        });
+      }
 
-        setTimeout(() => dialog.handleUpdate());
-      })
-      .catch((response) => {
-        dialog.close();
-        apiCatch(response);
-      });
-  },
+      dialog.open();
+
+      if (isComplete) {
+        return;
+      }
+
+      // 只传入了 ID，获取用户详情
+      getUser({ user_id: user })
+        .finally(() => {
+          actions.setState({ loading: false });
+        })
+        .then(({ data }) => {
+          actions.setState({
+            user_id: data.user_id,
+            username: data.username,
+            avatar: data.avatar,
+            cover: data.cover,
+            headline: data.headline,
+            blog: data.blog,
+            company: data.company,
+            location: data.location,
+            bio: data.bio,
+          });
+
+          setTimeout(() => dialog.handleUpdate());
+        })
+        .catch((response) => {
+          dialog.close();
+          apiCatch(response);
+        });
+    },
 
   /**
    * 关闭对话框

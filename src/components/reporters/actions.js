@@ -13,19 +13,21 @@ const as = {
   /**
    * 初始化
    */
-  onCreate: ({ element }) => (state, actions) => {
-    dialog = new mdui.Dialog(element, {
-      history: false,
-    });
+  onCreate:
+    ({ element }) =>
+    (state, actions) => {
+      dialog = new mdui.Dialog(element, {
+        history: false,
+      });
 
-    $dialogContent = dialog.$element
-      .find('.mdui-dialog-content')
-      .on('scroll', actions.infiniteLoad);
+      $dialogContent = dialog.$element
+        .find('.mdui-dialog-content')
+        .on('scroll', actions.infiniteLoad);
 
-    dialog.$element.on('close.mdui.dialog', () => {
-      $dialogContent.off('scroll', actions.infiniteLoad);
-    });
-  },
+      dialog.$element.on('close.mdui.dialog', () => {
+        $dialogContent.off('scroll', actions.infiniteLoad);
+      });
+    },
 
   /**
    * 下拉加载更多

@@ -1,6 +1,6 @@
 import $ from 'mdui.jq';
 import hljs from 'highlight.js/lib/core';
-import 'highlight.js/styles/github-gist.css';
+import 'highlight.js/styles/vs.css';
 import './style-dark.less';
 
 import xml from 'highlight.js/lib/languages/xml';
@@ -19,6 +19,6 @@ export default (element) => {
   $(element)
     .find('pre')
     .each((_, block) => {
-      hljs.highlightBlock(block);
+      hljs.highlightElement(block);
     });
 };

@@ -17,15 +17,17 @@ export const richText = (html) => (element) => {
  * @param str 字符串
  * @param length 截取的字符串长度，默认不截取
  */
-export const summaryText = (str, length = 0) => (element) => {
-  let text = str.replace(/<[^>]+>/g, '');
+export const summaryText =
+  (str, length = 0) =>
+  (element) => {
+    let text = str.replace(/<[^>]+>/g, '');
 
-  if (length) {
-    text = text.substr(0, length);
-  }
+    if (length) {
+      text = text.substr(0, length);
+    }
 
-  element.innerHTML = text;
-};
+    element.innerHTML = text;
+  };
 
 /**
  * 纯文本，把换行符转换为 <p>

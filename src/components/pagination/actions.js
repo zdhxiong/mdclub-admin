@@ -27,17 +27,19 @@ const as = {
   /**
    * 修改每页行数
    */
-  onPerPageChange: ({ e, per_page, onChange }) => (state, actions) => {
-    e.preventDefault();
+  onPerPageChange:
+    ({ e, per_page, onChange }) =>
+    (state, actions) => {
+      e.preventDefault();
 
-    window.localStorage.setItem('admin_per_page', per_page);
+      window.localStorage.setItem('admin_per_page', per_page);
 
-    actions.setState({ page: 1, per_page });
+      actions.setState({ page: 1, per_page });
 
-    $('#pagination-setting-menu-trigger').data('menu-instance').close();
+      $('#pagination-setting-menu-trigger').data('menu-instance').close();
 
-    onChange();
-  },
+      onChange();
+    },
 
   /**
    * 切换到上一页

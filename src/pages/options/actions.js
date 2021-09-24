@@ -14,35 +14,39 @@ import apiCatch from '~/utils/errorHandler';
 
 // options 和 option 共用
 const as = {
-  onCreate: ({ element }) => (state, actions) => {
-    emit('route_update');
-    emit('searchbar_state_update', { isNeedRender: false });
-    actions.setTitle('系统设置');
+  onCreate:
+    ({ element }) =>
+    (state, actions) => {
+      emit('route_update');
+      emit('searchbar_state_update', { isNeedRender: false });
+      actions.setTitle('系统设置');
 
-    // 滚动时，应用栏添加阴影
-    $(element).on('scroll', (e) =>
-      emit('appbar_state_update', { shadow: !!e.target.scrollTop }),
-    );
+      // 滚动时，应用栏添加阴影
+      $(element).on('scroll', (e) =>
+        emit('appbar_state_update', { shadow: !!e.target.scrollTop }),
+      );
 
-    // 加载初始数据
-    if (!state.data) {
-      actions.setState({ loading: true });
-      getOptions()
-        .finally(() => {
-          actions.setState({ loading: false });
-        })
-        .then(({ data }) => {
-          actions.setState({ data });
-        })
-        .catch(apiCatch);
-    }
-  },
+      // 加载初始数据
+      if (!state.data) {
+        actions.setState({ loading: true });
+        getOptions()
+          .finally(() => {
+            actions.setState({ loading: false });
+          })
+          .then(({ data }) => {
+            actions.setState({ data });
+          })
+          .catch(apiCatch);
+      }
+    },
 
-  onDestroy: ({ element }) => (_, actions) => {
-    $(element).off('scroll');
-    emit('appbar_state_update', { shadow: false });
-    actions.setState({ loading: false });
-  },
+  onDestroy:
+    ({ element }) =>
+    (_, actions) => {
+      $(element).off('scroll');
+      emit('appbar_state_update', { shadow: false });
+      actions.setState({ loading: false });
+    },
 
   /**
    * 提交保存

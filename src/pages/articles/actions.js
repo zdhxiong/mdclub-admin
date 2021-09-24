@@ -135,19 +135,21 @@ const as = {
   /**
    * 删除指定文章
    */
-  deleteOne: ({ article_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  deleteOne:
+    ({ article_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      deleteArticle({ article_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        deleteArticle({ article_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认删除该文章？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认删除该文章？', confirm, () => {}, options);
+    },
 
   /**
    * 批量删除文章

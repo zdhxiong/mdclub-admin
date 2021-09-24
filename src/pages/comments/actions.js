@@ -141,19 +141,21 @@ const as = {
   /**
    * 删除指定评论
    */
-  deleteOne: ({ comment_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  deleteOne:
+    ({ comment_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      deleteComment({ comment_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        deleteComment({ comment_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认删除该评论？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认删除该评论？', confirm, () => {}, options);
+    },
 
   /**
    * 批量删除评论

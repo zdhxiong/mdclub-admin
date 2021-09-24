@@ -46,14 +46,16 @@ const as = {
   /**
    * 点击纸片的删除按钮事件
    */
-  onChipDelete: ({ name }) => (state, actions) => {
-    const { data } = state;
+  onChipDelete:
+    ({ name }) =>
+    (state, actions) => {
+      const { data } = state;
 
-    data[name] = '';
+      data[name] = '';
 
-    actions.setState(data);
-    $document.trigger('search-submit');
-  },
+      actions.setState(data);
+      $document.trigger('search-submit');
+    },
 
   /**
    * 提交搜索

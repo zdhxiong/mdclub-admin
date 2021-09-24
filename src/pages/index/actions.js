@@ -143,28 +143,30 @@ const as = {
    * @param e
    * @param type
    */
-  onDateChange: ({ e, type }) => (state, actions) => {
-    const range = e.target.value;
-    const newData = state[type];
+  onDateChange:
+    ({ e, type }) =>
+    (state, actions) => {
+      const range = e.target.value;
+      const newData = state[type];
 
-    newData.range = range;
-    newData.loading = true;
-    newData.data = null;
+      newData.range = range;
+      newData.loading = true;
+      newData.data = null;
 
-    actions.setState({ [type]: newData });
+      actions.setState({ [type]: newData });
 
-    getStats({
-      include: [type],
-      start_date: getStartDate(range),
-      end_date: getEndDate(range),
-    })
-      .then(({ data }) => {
-        newData.loading = false;
-        newData.data = data[type];
-        actions.setState({ [type]: newData });
+      getStats({
+        include: [type],
+        start_date: getStartDate(range),
+        end_date: getEndDate(range),
       })
-      .catch(apiCatch);
-  },
+        .then(({ data }) => {
+          newData.loading = false;
+          newData.data = data[type];
+          actions.setState({ [type]: newData });
+        })
+        .catch(apiCatch);
+    },
 
   /**
    * 创建图表

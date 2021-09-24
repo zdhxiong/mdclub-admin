@@ -42,75 +42,77 @@ const as = {
    * 若topic为整型，则需要先根据该参数获取话题信息；
    * 若topic为对象，则不需要再获取话题信息
    */
-  open: (topic = null) => (state, actions) => {
-    actions.setState({
-      name_msg: '',
-      description_msg: '',
-      cover_msg: '',
-    });
-
-    // 添加数据
-    if (topic === null) {
+  open:
+    (topic = null) =>
+    (state, actions) => {
       actions.setState({
-        topic_id: 0,
-        name: '',
-        description: '',
-        cover: '',
-        loading: false,
+        name_msg: '',
+        description_msg: '',
+        cover_msg: '',
       });
-      $cover.val('');
+
+      // 添加数据
+      if (topic === null) {
+        actions.setState({
+          topic_id: 0,
+          name: '',
+          description: '',
+          cover: '',
+          loading: false,
+        });
+        $cover.val('');
+
+        dialog.open();
+
+        return;
+      }
+
+      const isComplete = !isNumber(topic);
+
+      if (isComplete) {
+        actions.setState({
+          topic_id: topic.topic_id,
+          name: unescape(topic.name),
+          description: unescape(topic.description),
+          cover: topic.cover.middle,
+          loading: false,
+        });
+      } else {
+        actions.setState({
+          topic_id: topic,
+          name: '',
+          description: '',
+          cover: '',
+          loading: true,
+        });
+      }
 
       dialog.open();
 
-      return;
-    }
+      if (isComplete) {
+        return;
+      }
 
-    const isComplete = !isNumber(topic);
+      // 只传入了 ID，获取话题详情
+      getTopic({ topic_id: topic })
+        .finally(() => {
+          actions.setState({ loading: false });
+        })
+        .then(({ data }) => {
+          actions.setState({
+            topic_id: data.topic_id,
+            name: unescape(data.name),
+            description: unescape(data.description),
+            cover: data.cover.small,
+          });
 
-    if (isComplete) {
-      actions.setState({
-        topic_id: topic.topic_id,
-        name: unescape(topic.name),
-        description: unescape(topic.description),
-        cover: topic.cover.middle,
-        loading: false,
-      });
-    } else {
-      actions.setState({
-        topic_id: topic,
-        name: '',
-        description: '',
-        cover: '',
-        loading: true,
-      });
-    }
-
-    dialog.open();
-
-    if (isComplete) {
-      return;
-    }
-
-    // 只传入了 ID，获取话题详情
-    getTopic({ topic_id: topic })
-      .finally(() => {
-        actions.setState({ loading: false });
-      })
-      .then(({ data }) => {
-        actions.setState({
-          topic_id: data.topic_id,
-          name: unescape(data.name),
-          description: unescape(data.description),
-          cover: data.cover.small,
+          setTimeout(() => dialog.handleUpdate());
+        })
+        .catch((response) => {
+          dialog.close();
+          apiCatch(response);
         });
-
-        setTimeout(() => dialog.handleUpdate());
-      })
-      .catch((response) => {
-        dialog.close();
-        apiCatch(response);
-      });
-  },
+    },
 
   /**
    * 关闭对话框

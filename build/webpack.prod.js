@@ -1,10 +1,9 @@
 const FileSystem = require('fs');
-const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const commonConfig  = require('./webpack.common.js');
 const { outputFolder, resolve } = require('./config');
 
@@ -13,7 +12,7 @@ const prodConfig = merge(commonConfig, {
   devtool: 'source-map',
   optimization: {
     minimize: true,
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    minimizer: [new TerserJSPlugin({}), new CssMinimizerPlugin({})],
   },
   output: {
     filename: 'index.[contenthash:8].js',
@@ -21,11 +20,6 @@ const prodConfig = merge(commonConfig, {
     publicPath: './',
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: 'production',
-      },
-    }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'index.[contenthash:8].css',

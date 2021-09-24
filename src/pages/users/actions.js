@@ -129,19 +129,21 @@ const as = {
   /**
    * 禁用指定用户
    */
-  disableOne: ({ user_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  disableOne:
+    ({ user_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      disableUser({ user_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        disableUser({ user_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认禁用该账号？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认禁用该账号？', confirm, () => {}, options);
+    },
 
   /**
    * 批量禁用用户

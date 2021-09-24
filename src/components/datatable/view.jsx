@@ -152,112 +152,110 @@ const ColumnTDAction = ({ button, row }) => {
   }
 };
 
-export default ({ loadData }) => (
-  { datatable: state },
-  { datatable: actions },
-) => {
-  const isEmpty = !state.loading && !state.data.length;
-  const isLoading = state.loading;
+export default ({ loadData }) =>
+  ({ datatable: state }, { datatable: actions }) => {
+    const isEmpty = !state.loading && !state.data.length;
+    const isLoading = state.loading;
 
-  return (
-    <div
-      class={cc(['mc-datatable', { 'is-top': !state.isScrollTop }])}
-      oncreate={(element) => actions.onCreate({ element })}
-      ondestroy={(element) => actions.onDestroy({ element })}
-    >
-      <table class="mdui-table">
-        <thead>
-          <tr class={cc([{ checked: state.checkedCount }])}>
-            <CheckAll
-              isChecked={state.isCheckedAll}
-              onChange={(e) => actions.checkAll(e)}
-            />
-            <If condition={state.checkedCount}>
-              <ColumnTHChecked state={state} />
-            </If>
-            <If condition={!state.checkedCount}>
-              {state.columns.map((column, index) => {
-                if (index !== state.columns.length - 1) {
-                  return <ColumnTH column={column} />;
-                }
-                return null;
-              })}
-              <th class="actions">
-                <Pagination
-                  onChange={loadData}
-                  loading={state.loading}
-                  orders={state.orders}
-                  order={state.order}
-                  changeOrder={actions.changeOrder}
-                  afterChangeOrder={loadData}
-                />
-              </th>
-            </If>
-          </tr>
-        </thead>
-
-        <Loading show={isLoading} />
-        <Empty show={isEmpty} />
-
-        <tbody
-          class={cc([
-            {
-              'is-loading': isLoading,
-              'is-empty': isEmpty,
-            },
-          ])}
-        >
-          {state.data.map((row) => (
-            <tr
-              key={row[state.primaryKey]}
-              data-id={row[state.primaryKey]}
-              class={cc([
-                {
-                  'mdui-table-row-selected':
-                    state.isCheckedRows[row[state.primaryKey]],
-                  'last-visit': state.lastVisitId === row[state.primaryKey],
-                },
-              ])}
-              onclick={(e) => {
-                if (
-                  typeof state.onRowClick === 'function' &&
-                  e.target.nodeName === 'TD'
-                ) {
-                  state.onRowClick(row);
-                }
-              }}
-            >
-              <CheckOne
-                isChecked={state.isCheckedRows[row[state.primaryKey]]}
-                onChange={() => actions.checkOne(row[state.primaryKey])}
-                avatar={row.avatar ? row.avatar.small : false}
+    return (
+      <div
+        class={cc(['mc-datatable', { 'is-top': !state.isScrollTop }])}
+        oncreate={(element) => actions.onCreate({ element })}
+        ondestroy={(element) => actions.onDestroy({ element })}
+      >
+        <table class="mdui-table">
+          <thead>
+            <tr class={cc([{ checked: state.checkedCount }])}>
+              <CheckAll
+                isChecked={state.isCheckedAll}
+                onChange={(e) => actions.checkAll(e)}
               />
-              {state.columns.map((column, index) => {
-                if (index !== state.columns.length - 1) {
-                  return <ColumnTD column={column} row={row} />;
-                }
-                return null;
-              })}
-              <td
-                class="actions"
-                style={`width: ${
-                  state.columns[state.columns.length - 1].width
-                }px;`}
-              >
-                <span class="placeholder">
-                  <ColumnTdText
-                    column={state.columns[state.columns.length - 1]}
-                    row={row}
+              <If condition={state.checkedCount}>
+                <ColumnTHChecked state={state} />
+              </If>
+              <If condition={!state.checkedCount}>
+                {state.columns.map((column, index) => {
+                  if (index !== state.columns.length - 1) {
+                    return <ColumnTH column={column} />;
+                  }
+                  return null;
+                })}
+                <th class="actions">
+                  <Pagination
+                    onChange={loadData}
+                    loading={state.loading}
+                    orders={state.orders}
+                    order={state.order}
+                    changeOrder={actions.changeOrder}
+                    afterChangeOrder={loadData}
                   />
-                </span>
-                {state.buttons.map((button) => (
-                  <ColumnTDAction button={button} row={row} />
-                ))}
-              </td>
+                </th>
+              </If>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+          </thead>
+
+          <Loading show={isLoading} />
+          <Empty show={isEmpty} />
+
+          <tbody
+            class={cc([
+              {
+                'is-loading': isLoading,
+                'is-empty': isEmpty,
+              },
+            ])}
+          >
+            {state.data.map((row) => (
+              <tr
+                key={row[state.primaryKey]}
+                data-id={row[state.primaryKey]}
+                class={cc([
+                  {
+                    'mdui-table-row-selected':
+                      state.isCheckedRows[row[state.primaryKey]],
+                    'last-visit': state.lastVisitId === row[state.primaryKey],
+                  },
+                ])}
+                onclick={(e) => {
+                  if (
+                    typeof state.onRowClick === 'function' &&
+                    e.target.nodeName === 'TD'
+                  ) {
+                    state.onRowClick(row);
+                  }
+                }}
+              >
+                <CheckOne
+                  isChecked={state.isCheckedRows[row[state.primaryKey]]}
+                  onChange={() => actions.checkOne(row[state.primaryKey])}
+                  avatar={row.avatar ? row.avatar.small : false}
+                />
+                {state.columns.map((column, index) => {
+                  if (index !== state.columns.length - 1) {
+                    return <ColumnTD column={column} row={row} />;
+                  }
+                  return null;
+                })}
+                <td
+                  class="actions"
+                  style={`width: ${
+                    state.columns[state.columns.length - 1].width
+                  }px;`}
+                >
+                  <span class="placeholder">
+                    <ColumnTdText
+                      column={state.columns[state.columns.length - 1]}
+                      row={row}
+                    />
+                  </span>
+                  {state.buttons.map((button) => (
+                    <ColumnTDAction button={button} row={row} />
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };

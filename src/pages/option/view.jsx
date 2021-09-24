@@ -18,67 +18,68 @@ import AnswerDelete from './components-page/answer_delete/view.jsx';
 import CommentEdit from './components-page/comment_edit/view.jsx';
 import CommentDelete from './components-page/comment_delete/view.jsx';
 
-export default (state, actions) => ({ match }) => {
-  const optionType = match.params.option;
-  const { data, loading } = state;
+export default (state, actions) =>
+  ({ match }) => {
+    const optionType = match.params.option;
+    const { data, loading } = state;
 
-  return (
-    <div
-      oncreate={(element) => actions.onCreate({ element })}
-      ondestroy={(element) => actions.onDestroy({ element })}
-      key={match.url}
-      class="mdui-container"
-      id="page-option"
-    >
-      <Nav path="/options" />
+    return (
+      <div
+        oncreate={(element) => actions.onCreate({ element })}
+        ondestroy={(element) => actions.onDestroy({ element })}
+        key={match.url}
+        class="mdui-container"
+        id="page-option"
+      >
+        <Nav path="/options" />
 
-      <div class="mdui-card mdui-card-shadow option">
-        <Loading show={loading} />
-        <If condition={data}>
-          <If condition={optionType === 'info'}>
-            <Info state={state} actions={actions} />
+        <div class="mdui-card mdui-card-shadow option">
+          <Loading show={loading} />
+          <If condition={data}>
+            <If condition={optionType === 'info'}>
+              <Info state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'theme'}>
+              <Theme state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'mail'}>
+              <Mail state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'cache'}>
+              <Cache state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'search'}>
+              <Search state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'upload'}>
+              <Upload state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'article_edit'}>
+              <ArticleEdit state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'article_delete'}>
+              <ArticleDelete state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'question_edit'}>
+              <QuestionEdit state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'question_delete'}>
+              <QuestionDelete state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'answer_edit'}>
+              <AnswerEdit state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'answer_delete'}>
+              <AnswerDelete state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'comment_edit'}>
+              <CommentEdit state={state} actions={actions} />
+            </If>
+            <If condition={optionType === 'comment_delete'}>
+              <CommentDelete state={state} actions={actions} />
+            </If>
           </If>
-          <If condition={optionType === 'theme'}>
-            <Theme state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'mail'}>
-            <Mail state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'cache'}>
-            <Cache state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'search'}>
-            <Search state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'upload'}>
-            <Upload state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'article_edit'}>
-            <ArticleEdit state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'article_delete'}>
-            <ArticleDelete state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'question_edit'}>
-            <QuestionEdit state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'question_delete'}>
-            <QuestionDelete state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'answer_edit'}>
-            <AnswerEdit state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'answer_delete'}>
-            <AnswerDelete state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'comment_edit'}>
-            <CommentEdit state={state} actions={actions} />
-          </If>
-          <If condition={optionType === 'comment_delete'}>
-            <CommentDelete state={state} actions={actions} />
-          </If>
-        </If>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };

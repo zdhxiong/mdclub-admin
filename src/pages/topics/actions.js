@@ -127,19 +127,21 @@ const as = {
   /**
    * 删除指定话题
    */
-  deleteOne: ({ topic_id }) => (state, actions) => {
-    const confirm = () => {
-      loadStart();
+  deleteOne:
+    ({ topic_id }) =>
+    (state, actions) => {
+      const confirm = () => {
+        loadStart();
 
-      deleteTopic({ topic_id })
-        .then(actions.deleteSuccess)
-        .catch(actions.deleteFail);
-    };
+        deleteTopic({ topic_id })
+          .then(actions.deleteSuccess)
+          .catch(actions.deleteFail);
+      };
 
-    const options = { confirmText: '确认', cancelText: '取消' };
+      const options = { confirmText: '确认', cancelText: '取消' };
 
-    mdui.confirm('确认删除该话题？', confirm, () => {}, options);
-  },
+      mdui.confirm('确认删除该话题？', confirm, () => {}, options);
+    },
 
   /**
    * 批量删除话题
