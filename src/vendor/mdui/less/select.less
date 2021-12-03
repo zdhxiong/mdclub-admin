@@ -220,7 +220,7 @@ select.mdui-select[multiple] {
   cursor: default;
 
   optgroup {
-    margin: 8px 0 0 0;
+    margin: 8px 0 0;
     padding: 0 0 0 16px;
     color: rgba(0, 0, 0, 0.38);
 
@@ -264,7 +264,6 @@ select.mdui-select[multiple] {
     @colorName: extract(@globalAccentColors, @counter-color);
 
     .mdui-theme-accent-@{colorName} when not (@colorName = null) {
-
       .mdui-select-menu-item {
         // 菜单中已选中项
         &[selected] {
